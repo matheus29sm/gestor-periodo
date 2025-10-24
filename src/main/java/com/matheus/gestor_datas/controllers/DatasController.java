@@ -1,13 +1,14 @@
 package com.matheus.gestor_datas.controllers;
 
+import com.matheus.gestor_datas.services.DatasService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.time.LocalDate;
 
-import com.matheus.gestor_datas.services.DatasService;
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/datas")
@@ -17,6 +18,11 @@ public class DatasController {
 
     public DatasController(DatasService datasService) {
         this.datasService = datasService;
+    }
+
+    @GetMapping
+    public String exibeDatas(){
+        return datasService.toString();
     }
 
     @GetMapping("/inicial")
@@ -29,13 +35,6 @@ public class DatasController {
         return datasService.getDataFinal();
     }
 
-    @GetMapping
-    public LocalDate[] exibeDatas(){
-        LocalDate[] datas = new LocalDate[2];
-        datas[0] = datasService.getDataInicial();
-        datas[1] = datasService.getDataFinal(); 
-        return datas;
-    }
 
     @PostMapping("/atualiza")
     public String atualizaDataInicial(@RequestBody Integer[] dataArray) {
@@ -52,5 +51,8 @@ public class DatasController {
     public Long buscaQuantidadeDias() {
         return datasService.calcularDiasEntreDatas();
     }
+
+    @GetMapping("/dias/distribuicao")
+    public Map<String, Long> buscaDiasSemana(){ return datasService.contaDiasDaSemanaEntreDatas();}
 
 }

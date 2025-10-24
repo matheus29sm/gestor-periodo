@@ -1,22 +1,24 @@
 package com.matheus.gestor_datas.services;
 
+import com.matheus.gestor_datas.utils.DiasDaSemanaUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
 public class DatasService {
-    
-    private LocalDate dataInicial;
-    private LocalDate dataFinal;
 
+    @Autowired
+    private DiasDaSemanaUtil  diasDaSemanaUtil;
 
-    public DatasService() {
-        // Define a data inicial padrão como 26 de agosto de 2024
-        this.dataInicial = LocalDate.of(2024, 8, 26);
-        this.dataFinal = LocalDate.now();
-    }
+    private LocalDate dataInicial = LocalDate.of(2024, 8, 26);
+    private LocalDate dataFinal = LocalDate.now();
 
     public LocalDate getDataInicial() {
         return this.dataInicial;
@@ -39,5 +41,25 @@ public class DatasService {
     
     public void atualizaDataFinal(){
         this.dataFinal = LocalDate.now();
+    }
+
+    public String formataData(LocalDate data){
+        return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    @Override
+    public String toString() {
+        return  "DataInicial: " + formataData(dataInicial)
+                + ", " +
+                "DataFinal: " + formataData(dataFinal);
+    }
+
+    public Map<String, Long> contaDiasDaSemanaEntreDatas() {
+        Map<String, Long> dias = new HashMap<>();
+        for (LocalDate data = dataInicial; !data.isAfter(dataFinal); data = data.plusDays(1)) {
+            String diasSemana = diasDaSemanaUtil.obterDiaSemanaEmPortugue(data.getDayOfWeek());
+            dias.put(diasSemana, dias.getOrDefault(diasSemana, 0L) + 1);
+        }
+        return dias;
     }
 }
