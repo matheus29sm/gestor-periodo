@@ -1,5 +1,6 @@
 package com.matheus.gestor_datas.services;
 
+import com.matheus.gestor_datas.dto.DatasDTO;
 import com.matheus.gestor_datas.utils.DiasDaSemanaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,18 @@ public class DatasService {
     public void atualizaDataFinal(){
         this.dataFinal = LocalDate.now();
     }
+
+    public String atualizarDataInicial(DatasDTO.AtualizarDataInicial request){
+        try{
+            LocalDate novaDataInicial = request.getNovaData();
+            setDataInicial(novaDataInicial);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return "A data inicial foi atualizada para: " + novaDataInicial.format(formatter);
+        } catch(IllegalArgumentException e){
+            return "Error: " + e.getMessage();
+        }
+    }
+
 
     public String formataData(LocalDate data){
         return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
