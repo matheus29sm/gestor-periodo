@@ -34,7 +34,7 @@ public class PeriodoController {
         return datasService.getDataFinal();
     }
 
-    @PutMapping("/atualiza")
+    @PutMapping("/atualizarInicial")
     public String atualizaDataInicial(
             @RequestBody DatasDTO.AtualizarDataInicial request)
     {
