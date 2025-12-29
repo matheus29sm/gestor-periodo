@@ -1,7 +1,7 @@
-package com.matheus.gestor_datas.services;
+package com.matheus.gestor_periodo.services;
 
-import com.matheus.gestor_datas.dto.DatasDTO;
-import com.matheus.gestor_datas.utils.DiasDaSemanaUtil;
+import com.matheus.gestor_periodo.dto.DatasDTO;
+import com.matheus.gestor_periodo.utils.DiasDaSemanaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @Service
-public class DatasService {
+public class PeriodoService {
 
     @Autowired
     private DiasDaSemanaUtil  diasDaSemanaUtil;
@@ -54,7 +54,6 @@ public class DatasService {
             return "Error: " + e.getMessage();
         }
     }
-
 
     public String formataData(LocalDate data){
         return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

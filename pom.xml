@@ -9,10 +9,13 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.matheus</groupId>
-	<artifactId>gestor-datas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>gestor-datas</name>
-	<description>Projeto para gerenciamento de dias a partir de um dia inicial pré-definido</description>
+	<artifactId>gestor-periodo</artifactId>
+	<version>0.0.2-SNAPSHOT</version>
+	<name>gestor-periodo</name>
+	<description>Projeto em Spring Boot que recebe duas datas (inicial e final),
+		calcula o intervalo de dias entre elas e retorna uma distribuição completa dos dias da semana.
+		As datas podem ser alteradas dinamicamente, permitindo flexibilidade em análises temporais e gerenciamento de períodos.
+	</description>
 	<url/>
 	<licenses>
 		<license/>

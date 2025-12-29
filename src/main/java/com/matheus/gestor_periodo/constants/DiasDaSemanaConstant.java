@@ -1,4 +1,4 @@
-package com.matheus.gestor_datas.constants;
+package com.matheus.gestor_periodo.constants;
 
 public class DiasDaSemanaConstant {
 

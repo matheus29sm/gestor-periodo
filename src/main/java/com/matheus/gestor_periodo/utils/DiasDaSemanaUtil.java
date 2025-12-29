@@ -1,16 +1,16 @@
-package com.matheus.gestor_datas.utils;
+package com.matheus.gestor_periodo.utils;
 
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.DOMINGO;
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.QUARTA;
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.QUINTA;
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.SABADO;
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.SEGUNDA;
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.SEXTA;
-import static com.matheus.gestor_datas.constants.DiasDaSemanaConstant.TERCA;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.DOMINGO;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.QUARTA;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.QUINTA;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.SABADO;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.SEGUNDA;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.SEXTA;
+import static com.matheus.gestor_periodo.constants.DiasDaSemanaConstant.TERCA;
 
 @Component
 public class DiasDaSemanaUtil {

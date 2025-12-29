@@ -1,7 +1,7 @@
-package com.matheus.gestor_datas.controllers;
+package com.matheus.gestor_periodo.controllers;
 
-import com.matheus.gestor_datas.dto.DatasDTO;
-import com.matheus.gestor_datas.services.DatasService;
+import com.matheus.gestor_periodo.dto.DatasDTO;
+import com.matheus.gestor_periodo.services.PeriodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,11 +13,11 @@ import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/datas")
-public class DatasController {
+@RequestMapping("/periodo")
+public class PeriodoController {
 
     @Autowired
-    private DatasService datasService;
+    private PeriodoService datasService;
 
     @GetMapping
     public String exibeDatas(){
@@ -41,13 +41,13 @@ public class DatasController {
        return datasService.atualizarDataInicial(request);
     }
 
-    @GetMapping("/dias/quantidade")
-    public Long buscaQuantidadeDias() {
+    @GetMapping("/quantidade")
+    public Long buscarQuantidadeDias() {
         return datasService.calcularDiasEntreDatas();
     }
 
-    @GetMapping("/dias/distribuicao")
-    public Map<String, Long> buscaDiasSemana(){
+    @GetMapping("/distribuicao")
+    public Map<String, Long> buscarDistribuicaoDias(){
         return datasService.contaDiasDaSemanaEntreDatas();
     }
 

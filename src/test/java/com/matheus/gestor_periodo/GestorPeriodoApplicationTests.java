@@ -1,10 +1,10 @@
-package com.matheus.gestor_datas;
+package com.matheus.gestor_periodo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GestorDatasApplicationTests {
+class GestorPeriodoApplicationTests {
 
 	@Test
 	void contextLoads() {
