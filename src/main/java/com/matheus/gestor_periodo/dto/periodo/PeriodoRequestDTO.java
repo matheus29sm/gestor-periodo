@@ -1,4 +1,4 @@
-package com.matheus.gestor_periodo.dto;
+package com.matheus.gestor_periodo.dto.periodo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

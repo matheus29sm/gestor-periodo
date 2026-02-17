@@ -1,6 +1,6 @@
 package com.matheus.gestor_periodo.repository;
 
-import com.matheus.gestor_periodo.dto.PeriodoReponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
 import com.matheus.gestor_periodo.entity.Periodo;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

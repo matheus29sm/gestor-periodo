@@ -1,6 +1,7 @@
 package com.matheus.gestor_periodo.controllers;
 
-import com.matheus.gestor_periodo.dto.PeriodoRequestDTO;
+import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.services.PeriodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/periodo")
@@ -53,7 +54,7 @@ public class PeriodoController {
     }
 
     @GetMapping("/distribuicao")
-    public Map<String, Long> buscarDistribuicaoDias(){
+    public List<DiaSemanaResponseDTO.DiaSemana> buscarDistribuicaoDias(){
         return periodoService.contaDiasDaSemanaEntreDatas();
     }
 

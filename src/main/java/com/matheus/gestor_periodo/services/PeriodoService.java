@@ -1,7 +1,8 @@
 package com.matheus.gestor_periodo.services;
 
-import com.matheus.gestor_periodo.dto.PeriodoReponseDTO;
-import com.matheus.gestor_periodo.dto.PeriodoRequestDTO;
+import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.repository.PeriodoRepository;
 import com.matheus.gestor_periodo.utils.DiasDaSemanaUtil;
 import com.matheus.gestor_periodo.utils.FormataDataUtil;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -79,17 +80,27 @@ public class PeriodoService {
     }
 
 
-    public Map<String, Long> contaDiasDaSemanaEntreDatas() {
-        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1l)
+    public List<DiaSemanaResponseDTO.DiaSemana> contaDiasDaSemanaEntreDatas() {
+        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
-        Map<String, Long> dias = new HashMap<>();
+        List<DiaSemanaResponseDTO.DiaSemana> dias = new ArrayList<>();
 
         for (LocalDate data = periodo.getDataInicial(); !data.isAfter(periodo.getDataFinal()); data = data.plusDays(1)) {
-            String diasSemana = diasDaSemanaUtil.obterDiaSemanaEmPortugue(data.getDayOfWeek());
-            dias.put(diasSemana, dias.getOrDefault(diasSemana, 0L) + 1);
+            String diaSemana = diasDaSemanaUtil.obterDiaSemanaEmPortugue(data.getDayOfWeek());
+
+            Optional<DiaSemanaResponseDTO.DiaSemana> existente = dias.stream()
+                    .filter(d -> d.getDia().equals(diaSemana))
+                    .findFirst();
+
+            if (existente.isPresent()) {
+                existente.get().setQuantidade(existente.get().getQuantidade() + 1);
+            } else {
+                dias.add(new DiaSemanaResponseDTO.DiaSemana(diaSemana, 1l));
+            }
         }
 
         return dias;
     }
+
 }
