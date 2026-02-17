@@ -5,11 +5,12 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-public class DatasDTO {
+public class PeriodoRequestDTO {
 
         @Data
-        public static class AtualizarDataInicial{
+        public static class AtualizarData{
             @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
             private LocalDate novaData;
         }
+
 }
