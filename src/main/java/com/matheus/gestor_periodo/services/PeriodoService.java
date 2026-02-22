@@ -1,5 +1,6 @@
 package com.matheus.gestor_periodo.services;
 
+import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
 import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
@@ -24,37 +25,38 @@ public class PeriodoService {
     @Autowired
     private PeriodoRepository periodoRepository;
     @Autowired
-    private DiasDaSemanaUtil  diasDaSemanaUtil;
+    private DiasDaSemanaUtil diasDaSemanaUtil;
     @Autowired
     private FormataDataUtil formataDataUtil;
 
-    public ResponseEntity<String> obterDataInicial() {
+    public ResponseEntity<ApiResponseDTO> obterPeriodo() {
+        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1l)
+                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+
+        String response = "DataInicial: " + formataDataUtil.formataData(periodo.getDataInicial())
+                + " - " +
+                "DataFinal: " + formataDataUtil.formataData(periodo.getDataFinal());
+
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Período obtido com sucesso", response));
+    }
+
+    public ResponseEntity<ApiResponseDTO> obterDataInicial() {
         String response = periodoRepository.buscarPeriodo(1l)
                 .map(p -> formataDataUtil.formataData(p.getDataInicial()))
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Data inicial obtida com sucesso", response));
     }
 
-    public ResponseEntity<String> obterDataFinal() {
+    public ResponseEntity<ApiResponseDTO> obterDataFinal() {
          String response = periodoRepository.buscarPeriodo(1l)
                 .map(p -> formataDataUtil.formataData(p.getDataFinal()))
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
-         return ResponseEntity.ok(response);
+         return ResponseEntity.ok(new ApiResponseDTO(200, "Data final obtida com sucesso", response));
     }
 
-    public ResponseEntity<String> obterPeriodo() {
-        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1l)
-                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
-
-         String response = "DataInicial: " + formataDataUtil.formataData(periodo.getDataInicial())
-                + ", " +
-                "DataFinal: " + formataDataUtil.formataData(periodo.getDataFinal());
-
-         return ResponseEntity.ok(response);
-    }
-
-    public ResponseEntity<String> atualizarDataInicial(PeriodoRequestDTO.AtualizarData request){
+    public ResponseEntity<ApiResponseDTO> atualizarDataInicial(PeriodoRequestDTO.AtualizarData request){
             LocalDate novaDataInicial = request.getNovaData();
         LocalDate dataFinal = periodoRepository.buscarPeriodo(1l)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!")).getDataFinal();
@@ -65,31 +67,33 @@ public class PeriodoService {
 
             periodoRepository.atualizarDataInicial(1l, novaDataInicial);
 
-            String response ="A data inicial foi atualizada para: " + formataDataUtil.formataData(novaDataInicial);
-            return ResponseEntity.ok(response);
+            String response = formataDataUtil.formataData(novaDataInicial);
+
+        return ResponseEntity.ok(new ApiResponseDTO(200, "A data inicial foi atualizada com sucesso", response));
     }
 
-    public ResponseEntity<String> atualizarDataFinal(PeriodoRequestDTO.AtualizarData request){
+    public ResponseEntity<ApiResponseDTO> atualizarDataFinal(PeriodoRequestDTO.AtualizarData request){
         LocalDate novaDataFinal = request.getNovaData();
 
         periodoRepository.atualizarDataFinal(1l, novaDataFinal);
 
-        String response = "A data final foi atualizada para: " + formataDataUtil.formataData(novaDataFinal);
+        String response = formataDataUtil.formataData(novaDataFinal);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ApiResponseDTO(200, "A data final foi atualizada com sucesso", response));
 
     }
 
-    public ResponseEntity<Long> calcularDiasEntreDatas() {
+    public ResponseEntity<ApiResponseDTO> calcularDiasEntreDatas() {
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1l)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
         Long total = ChronoUnit.DAYS.between(periodo.getDataInicial(), periodo.getDataFinal());
-        return ResponseEntity.ok(total);
+
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Total de dias calculado com sucesso", total));
     }
 
 
-    public ResponseEntity<List<DiaSemanaResponseDTO.DiaSemana>> contaDiasDaSemanaEntreDatas() {
+    public ResponseEntity<ApiResponseDTO> contaDiasDaSemanaEntreDatas() {
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
@@ -109,7 +113,7 @@ public class PeriodoService {
             }
         }
 
-        return ResponseEntity.ok(dias);
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Dias da semana calculados e distribuidos com sucesso", dias));
     }
 
 }
