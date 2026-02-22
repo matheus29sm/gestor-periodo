@@ -8,6 +8,7 @@ import com.matheus.gestor_periodo.utils.DiasDaSemanaUtil;
 import com.matheus.gestor_periodo.utils.FormataDataUtil;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,28 +28,33 @@ public class PeriodoService {
     @Autowired
     private FormataDataUtil formataDataUtil;
 
-    public String obterDataInicial() {
-        return periodoRepository.buscarPeriodo(1l)
+    public ResponseEntity<String> obterDataInicial() {
+        String response = periodoRepository.buscarPeriodo(1l)
                 .map(p -> formataDataUtil.formataData(p.getDataInicial()))
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        return ResponseEntity.ok(response);
     }
 
-    public String obterDataFinal() {
-        return periodoRepository.buscarPeriodo(1l)
+    public ResponseEntity<String> obterDataFinal() {
+         String response = periodoRepository.buscarPeriodo(1l)
                 .map(p -> formataDataUtil.formataData(p.getDataFinal()))
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+
+         return ResponseEntity.ok(response);
     }
 
-    public String obterPeriodo() {
+    public ResponseEntity<String> obterPeriodo() {
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1l)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
-        return  "DataInicial: " + formataDataUtil.formataData(periodo.getDataInicial())
+         String response = "DataInicial: " + formataDataUtil.formataData(periodo.getDataInicial())
                 + ", " +
                 "DataFinal: " + formataDataUtil.formataData(periodo.getDataFinal());
+
+         return ResponseEntity.ok(response);
     }
 
-    public String atualizarDataInicial(PeriodoRequestDTO.AtualizarData request){
+    public ResponseEntity<String> atualizarDataInicial(PeriodoRequestDTO.AtualizarData request){
             LocalDate novaDataInicial = request.getNovaData();
         LocalDate dataFinal = periodoRepository.buscarPeriodo(1l)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!")).getDataFinal();
@@ -59,28 +65,31 @@ public class PeriodoService {
 
             periodoRepository.atualizarDataInicial(1l, novaDataInicial);
 
-            return "A data inicial foi atualizada para: " + formataDataUtil.formataData(novaDataInicial);
-
+            String response ="A data inicial foi atualizada para: " + formataDataUtil.formataData(novaDataInicial);
+            return ResponseEntity.ok(response);
     }
 
-    public String atualizarDataFinal(PeriodoRequestDTO.AtualizarData request){
+    public ResponseEntity<String> atualizarDataFinal(PeriodoRequestDTO.AtualizarData request){
         LocalDate novaDataFinal = request.getNovaData();
 
         periodoRepository.atualizarDataFinal(1l, novaDataFinal);
 
-        return "A data final foi atualizada para: " + formataDataUtil.formataData(novaDataFinal);
+        String response = "A data final foi atualizada para: " + formataDataUtil.formataData(novaDataFinal);
+
+        return ResponseEntity.ok(response);
 
     }
 
-    public long calcularDiasEntreDatas() {
+    public ResponseEntity<Long> calcularDiasEntreDatas() {
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1l)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
-        return ChronoUnit.DAYS.between(periodo.getDataInicial(), periodo.getDataFinal());
+        Long total = ChronoUnit.DAYS.between(periodo.getDataInicial(), periodo.getDataFinal());
+        return ResponseEntity.ok(total);
     }
 
 
-    public List<DiaSemanaResponseDTO.DiaSemana> contaDiasDaSemanaEntreDatas() {
+    public ResponseEntity<List<DiaSemanaResponseDTO.DiaSemana>> contaDiasDaSemanaEntreDatas() {
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
@@ -100,7 +109,7 @@ public class PeriodoService {
             }
         }
 
-        return dias;
+        return ResponseEntity.ok(dias);
     }
 
 }

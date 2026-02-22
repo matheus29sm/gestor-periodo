@@ -4,6 +4,7 @@ import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.services.PeriodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,41 +21,41 @@ public class PeriodoController {
     private PeriodoService periodoService;
 
     @GetMapping
-    public String exibePeriodo(){
+    public ResponseEntity<String> exibePeriodo(){
         return periodoService.obterPeriodo();
     }
 
     @GetMapping("/inicial")
-    public String exibeDataInicial(){
+    public ResponseEntity<String> exibeDataInicial(){
         return periodoService.obterDataInicial();
     }
 
     @GetMapping("/final")
-    public String exibeDataFinal(){
+    public ResponseEntity<String> exibeDataFinal(){
         return periodoService.obterDataFinal();
     }
 
     @PutMapping("/atualizarInicial")
-    public String atualizaDataInicial(
+    public ResponseEntity<String> atualizaDataInicial(
             @RequestBody PeriodoRequestDTO.AtualizarData request)
     {
        return periodoService.atualizarDataInicial(request);
     }
 
     @PutMapping("/atualizarFinal")
-    public String atualizaDataFinal(
+    public ResponseEntity<String> atualizaDataFinal(
             @RequestBody PeriodoRequestDTO.AtualizarData request)
     {
         return periodoService.atualizarDataFinal(request);
     }
 
     @GetMapping("/quantidade")
-    public Long buscarQuantidadeDias() {
+    public ResponseEntity<Long> buscarQuantidadeDias() {
         return periodoService.calcularDiasEntreDatas();
     }
 
     @GetMapping("/distribuicao")
-    public List<DiaSemanaResponseDTO.DiaSemana> buscarDistribuicaoDias(){
+    public ResponseEntity<List<DiaSemanaResponseDTO.DiaSemana>> buscarDistribuicaoDias(){
         return periodoService.contaDiasDaSemanaEntreDatas();
     }
 
