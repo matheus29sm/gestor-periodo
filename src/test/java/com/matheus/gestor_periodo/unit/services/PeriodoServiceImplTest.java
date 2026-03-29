@@ -1,9 +1,10 @@
-package com.matheus.gestor_periodo.services;
+package com.matheus.gestor_periodo.unit.services;
 
 import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.repository.PeriodoRepository;
+import com.matheus.gestor_periodo.services.PeriodoServiceImpl;
 import com.matheus.gestor_periodo.utils.DiasDaSemanaUtil;
 import com.matheus.gestor_periodo.utils.FormataDataUtil;
 import org.hibernate.service.spi.ServiceException;
