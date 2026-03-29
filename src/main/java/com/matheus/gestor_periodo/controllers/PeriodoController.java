@@ -3,6 +3,7 @@ package com.matheus.gestor_periodo.controllers;
 import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.services.PeriodoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,14 +36,14 @@ public class PeriodoController {
 
     @PutMapping("/atualizarInicial")
     public ResponseEntity<ApiResponseDTO> atualizaDataInicial(
-            @RequestBody PeriodoRequestDTO.AtualizarData request)
+            @Valid @RequestBody PeriodoRequestDTO.AtualizarData request)
     {
        return periodoService.atualizarDataInicial(request);
     }
 
     @PutMapping("/atualizarFinal")
     public ResponseEntity<ApiResponseDTO> atualizaDataFinal(
-            @RequestBody PeriodoRequestDTO.AtualizarData request)
+            @Valid @RequestBody PeriodoRequestDTO.AtualizarData request)
     {
         return periodoService.atualizarDataFinal(request);
     }

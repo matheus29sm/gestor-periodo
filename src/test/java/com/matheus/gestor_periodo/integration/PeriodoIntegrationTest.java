@@ -9,18 +9,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class PeriodoIntegrationTest {
 
     @Autowired
@@ -43,7 +43,8 @@ class PeriodoIntegrationTest {
             mockMvc.perform(get("/periodo"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("Período obtido com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("Período obtido com sucesso"))
                     .andExpect(jsonPath("$.dados").value(response));
         }
 
@@ -55,7 +56,8 @@ class PeriodoIntegrationTest {
             mockMvc.perform(get("/periodo/inicial"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("A data inicial foi atualizada com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("Data inicial obtida com sucesso"))
                     .andExpect(jsonPath("$.dados").value(response));
         }
 
@@ -67,7 +69,8 @@ class PeriodoIntegrationTest {
             mockMvc.perform(get("/periodo/final"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("Data final obtida com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("Data final obtida com sucesso"))
                     .andExpect(jsonPath("$.dados").value(response));
         }
 
@@ -86,7 +89,8 @@ class PeriodoIntegrationTest {
                             .content(request))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("A data inicial foi atualizada com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("A data inicial foi atualizada com sucesso"))
                     .andExpect(jsonPath("$.dados").value(novaData));
         }
 
@@ -105,7 +109,8 @@ class PeriodoIntegrationTest {
                             .content(request))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("A data final foi atualizada com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("A data final foi atualizada com sucesso"))
                     .andExpect(jsonPath("$.dados").value(novaData));
         }
 
@@ -114,7 +119,8 @@ class PeriodoIntegrationTest {
             mockMvc.perform(get("/periodo/quantidade"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("Total de dias calculado com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("Total de dias calculado com sucesso"))
                     .andExpect(jsonPath("$.dados").isNotEmpty())
                     .andExpect(jsonPath("$.dados").isNumber());
         }
@@ -124,7 +130,8 @@ class PeriodoIntegrationTest {
             mockMvc.perform(get("/periodo/distribuicao"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.status").value(200))
-                    .andExpect(jsonPath("$.mensagem").value("Dias da semana calculados e distribuidos com sucesso"))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("Dias da semana calculados e distribuidos com sucesso"))
                     .andExpect(jsonPath("$.dados").isNotEmpty());
         }
     }
@@ -134,13 +141,69 @@ class PeriodoIntegrationTest {
     class FalhaTests {
 
         @Test
-        @DisplayName("Deve tentar atualizar a data inicial")
-        void deveTentarAtualizaDataInicialSemNovaData() throws Exception {
-             mockMvc.perform(put("/periodo/atualizarInicial")
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isInternalServerError())
-                    .andExpect(jsonPath("$.status").value(500))
-                    .andExpect(jsonPath("$.mensagem").value("Ocorreu um erro inesperado!"));
+        @DisplayName("Deve tentar atualizar a data inicial com nova data vazia")
+        void deveTentarAtualizaDataInicialDataVazia() throws Exception {
+            String request = """
+               {
+               "novaData": null
+               }
+               """;
+
+            mockMvc.perform(put("/periodo/atualizarInicial")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("A nova data não pode ser nula"));
         }
+
+        @Test
+        @DisplayName("Deve tentar atualizar a data inicial com formato de data inválido")
+        void deveTentarAtualizaDataInicialComFormatoDataInvalido() throws Exception {
+            String request = """
+               {
+               "novaData": "29-03-2026"
+               }
+               """;
+
+            mockMvc.perform(put("/periodo/atualizarInicial")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("O body da requisição é inválido ou está vazio"));
+        }
+
+        @Test
+        @DisplayName("Deve tentar atualizar a data inicial com formato de data inválido")
+        void deveTentarAtualizaDataInicialSemNovaData() throws Exception {
+            mockMvc.perform(put("/periodo/atualizarInicial")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("O body da requisição é inválido ou está vazio"));
+        }
+
+        @Test
+        @DisplayName("Deve tentar atualizar a data final com formato de data inválido")
+        void deveTentarAtualizaDataFinalComFormatoDataInvalido() throws Exception {
+            String request = """
+               {
+               "novaData": null
+               }
+               """;
+
+            mockMvc.perform(put("/periodo/atualizarFinal")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(request))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.mensagem")
+                            .value("A nova data não pode ser nula"));
+        }
+
     }
 }
