@@ -151,6 +151,8 @@ class PeriodoServiceImplTest {
         void deveAtualizarDataFinalComSucesso() {
             LocalDate novaData = LocalDate.of(2026, 05, 31);
 
+            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodo.getDataInicial()).thenReturn(INICIO);
             when(atualizarData.getNovaData()).thenReturn(novaData);
             when(formataDataUtil.formataData(novaData)).thenReturn("31/05/2026");
 
@@ -159,6 +161,21 @@ class PeriodoServiceImplTest {
             assertTrue(response.getBody().getMensagem().contains("A data final foi atualizada com sucesso"));
             assertEquals("31/05/2026", response.getBody().getDados());
             verify(periodoRepository).atualizarDataFinal(1L, novaData);
+        }
+
+        @Test
+        @DisplayName("Deve lançar exceção quando nova data final é anterior à data inicial")
+        void deveLancarExcecaoQuandoNovaDataFinalAnteriorADataInicial() {
+            LocalDate novaData = LocalDate.of(2026, 02, 28);
+
+            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodo.getDataInicial()).thenReturn(INICIO);
+            when(atualizarData.getNovaData()).thenReturn(novaData);
+
+            ServiceException serviceException = assertThrows(ServiceException.class,
+                    () -> periodoService.atualizarDataFinal(atualizarData));
+
+            assertEquals("A data final não pode ser anterior à data inicial.", serviceException.getMessage());
         }
 
     }

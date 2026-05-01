@@ -80,6 +80,13 @@ public class PeriodoServiceImpl implements PeriodoService{
     public ResponseEntity<ApiResponseDTO> atualizarDataFinal(PeriodoRequestDTO.AtualizarData request){
         LocalDate novaDataFinal = request.getNovaData();
 
+        LocalDate dataInicial = periodoRepository.buscarPeriodo(1L)
+                .orElseThrow(() -> new ServiceException("Período não encontrado!")).getDataInicial();
+
+        if (novaDataFinal.isBefore((dataInicial))){
+            throw new ServiceException("A data final não pode ser anterior à data inicial.");
+        }
+
         periodoRepository.atualizarDataFinal(1L, novaDataFinal);
 
         String response = formataDataUtil.formataData(novaDataFinal);
