@@ -117,7 +117,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve atualizar data inicial com sucesso")
         void deveAtualizarDataInicialComSucesso() {
-            LocalDate novaData = LocalDate.of(2026, 03, 01);
+            LocalDate novaData = LocalDate.of(2026, 3, 1);
 
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataFinal()).thenReturn(FIM);
@@ -134,7 +134,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve lançar exceção quando nova data inicial é posterior à data final")
         void deveLancarExcecaoQuandoNovaDataInicialPosteriorADataFinal() {
-            LocalDate novaData = LocalDate.of(2026, 05, 31);
+            LocalDate novaData = LocalDate.of(2026, 5, 31);
 
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataFinal()).thenReturn(FIM);
@@ -149,7 +149,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve atualizar data final com sucesso")
         void deveAtualizarDataFinalComSucesso() {
-            LocalDate novaData = LocalDate.of(2026, 05, 31);
+            LocalDate novaData = LocalDate.of(2026, 5, 31);
 
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
@@ -166,7 +166,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve lançar exceção quando nova data final é anterior à data inicial")
         void deveLancarExcecaoQuandoNovaDataFinalAnteriorADataInicial() {
-            LocalDate novaData = LocalDate.of(2026, 02, 28);
+            LocalDate novaData = LocalDate.of(2026, 2, 28);
 
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
