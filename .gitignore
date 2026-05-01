@@ -31,3 +31,18 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Logs ###
+*.log
+
+### Sistema ###
+*.DS_Store
+Thumbs.db
+
+### Docker ###
+*.pid
+*.tar
+.env
+
+### Arquivos temporários ###
+*.tmp
