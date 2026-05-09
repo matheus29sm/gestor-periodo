@@ -6,11 +6,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface PeriodoService {
 
-    ResponseEntity<ApiResponseDTO> obterPeriodo();
+    ResponseEntity<ApiResponseDTO> buscarPeriodo();
 
-    ResponseEntity<ApiResponseDTO> obterDataInicial();
+    ResponseEntity<ApiResponseDTO> buscarDataInicial();
 
-    ResponseEntity<ApiResponseDTO> obterDataFinal();
+    ResponseEntity<ApiResponseDTO> buscarDataFinal();
 
     ResponseEntity<ApiResponseDTO> atualizarDataInicial(PeriodoRequestDTO.AtualizarData request);
 

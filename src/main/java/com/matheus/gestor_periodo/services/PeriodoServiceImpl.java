@@ -30,7 +30,7 @@ public class PeriodoServiceImpl implements PeriodoService{
     private FormataDataUtil formataDataUtil;
 
     @Override
-    public ResponseEntity<ApiResponseDTO> obterPeriodo() {
+    public ResponseEntity<ApiResponseDTO> buscarPeriodo() {
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
@@ -42,7 +42,7 @@ public class PeriodoServiceImpl implements PeriodoService{
     }
 
     @Override
-    public ResponseEntity<ApiResponseDTO> obterDataInicial() {
+    public ResponseEntity<ApiResponseDTO> buscarDataInicial() {
         String response = periodoRepository.buscarPeriodo(1L)
                 .map(p -> formataDataUtil.formataData(p.getDataInicial()))
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
@@ -51,7 +51,7 @@ public class PeriodoServiceImpl implements PeriodoService{
     }
 
     @Override
-    public ResponseEntity<ApiResponseDTO> obterDataFinal() {
+    public ResponseEntity<ApiResponseDTO> buscarDataFinal() {
          String response = periodoRepository.buscarPeriodo(1L)
                 .map(p -> formataDataUtil.formataData(p.getDataFinal()))
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));

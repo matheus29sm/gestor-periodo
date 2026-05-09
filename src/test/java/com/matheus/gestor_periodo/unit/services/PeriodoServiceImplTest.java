@@ -53,13 +53,13 @@ class PeriodoServiceImplTest {
     class ObterPeriodoTests {
 
         @Test
-        @DisplayName("Deve obter período com sucesso")
+        @DisplayName("Deve buscar período com sucesso")
         void deveObterPeriodoComSucesso() {
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(periodo.getDataFinal()).thenReturn(FIM);
 
-            ResponseEntity<ApiResponseDTO> response = periodoService.obterPeriodo();
+            ResponseEntity<ApiResponseDTO> response = periodoService.buscarPeriodo();
 
             assertEquals(200, response.getBody().getStatus());
             assertTrue(response.getBody().getMensagem().contains("Período obtido com sucesso"));
@@ -71,7 +71,7 @@ class PeriodoServiceImplTest {
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.empty());
 
             ServiceException serviceException = assertThrows(ServiceException.class,
-                    () -> periodoService.obterPeriodo());
+                    () -> periodoService.buscarPeriodo());
 
             assertEquals("Período não encontrado!", serviceException.getMessage());
         }
@@ -82,13 +82,13 @@ class PeriodoServiceImplTest {
     class ObterDatasTests {
 
         @Test
-        @DisplayName("Deve obter data inicial com sucesso")
+        @DisplayName("Deve buscar data inicial com sucesso")
         void deveObterDataInicialComSucesso() {
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(formataDataUtil.formataData(INICIO)).thenReturn("01/03/2026");
 
-            ResponseEntity<ApiResponseDTO> response = periodoService.obterDataInicial();
+            ResponseEntity<ApiResponseDTO> response = periodoService.buscarDataInicial();
 
             assertTrue(response.getBody().getMensagem().contains("Data inicial obtida com sucesso"));
             assertEquals("01/03/2026", response.getBody().getDados());
@@ -101,7 +101,7 @@ class PeriodoServiceImplTest {
             when(periodo.getDataFinal()).thenReturn(FIM);
             when(formataDataUtil.formataData(FIM)).thenReturn("11/03/2026");
 
-            ResponseEntity<ApiResponseDTO> response = periodoService.obterDataFinal();
+            ResponseEntity<ApiResponseDTO> response = periodoService.buscarDataFinal();
 
             assertTrue(response.getBody().getMensagem().contains("Data final obtida com sucesso"));
             assertEquals("11/03/2026", response.getBody().getDados());

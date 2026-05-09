@@ -21,40 +21,40 @@ public class PeriodoController {
 
     @GetMapping
     public ResponseEntity<ApiResponseDTO> exibePeriodo(){
-        return periodoService.obterPeriodo();
+        return periodoService.buscarPeriodo();
     }
 
     @GetMapping("/inicial")
     public ResponseEntity<ApiResponseDTO> exibeDataInicial(){
-        return periodoService.obterDataInicial();
+        return periodoService.buscarDataInicial();
     }
 
     @GetMapping("/final")
     public ResponseEntity<ApiResponseDTO> exibeDataFinal(){
-        return periodoService.obterDataFinal();
+        return periodoService.buscarDataFinal();
     }
 
     @PutMapping("/atualizarInicial")
-    public ResponseEntity<ApiResponseDTO> atualizaDataInicial(
+    public ResponseEntity<ApiResponseDTO> atualizarDataInicial(
             @Valid @RequestBody PeriodoRequestDTO.AtualizarData request)
     {
        return periodoService.atualizarDataInicial(request);
     }
 
     @PutMapping("/atualizarFinal")
-    public ResponseEntity<ApiResponseDTO> atualizaDataFinal(
+    public ResponseEntity<ApiResponseDTO> atualizarDataFinal(
             @Valid @RequestBody PeriodoRequestDTO.AtualizarData request)
     {
         return periodoService.atualizarDataFinal(request);
     }
 
     @GetMapping("/quantidade")
-    public ResponseEntity<ApiResponseDTO> buscarQuantidadeDias() {
+    public ResponseEntity<ApiResponseDTO> exibeQuantidadeDias() {
         return periodoService.calcularDiasEntreDatas();
     }
 
     @GetMapping("/distribuicao")
-    public ResponseEntity<ApiResponseDTO> buscarDistribuicaoDias(){
+    public ResponseEntity<ApiResponseDTO> exibeDistribuicaoDias(){
         return periodoService.contaDiasDaSemanaEntreDatas();
     }
 
