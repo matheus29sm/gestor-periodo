@@ -4,8 +4,8 @@ import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
 import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
+import com.matheus.gestor_periodo.helper.PeriodoHelper;
 import com.matheus.gestor_periodo.repository.PeriodoRepository;
-import com.matheus.gestor_periodo.utils.DiasDaSemanaUtil;
 import com.matheus.gestor_periodo.utils.FormataDataUtil;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 
 @Service
 public class PeriodoServiceImpl implements PeriodoService{
 
     @Autowired
-    private PeriodoRepository periodoRepository;
+    private PeriodoHelper periodoHelper;
     @Autowired
-    private DiasDaSemanaUtil diasDaSemanaUtil;
+    private PeriodoRepository periodoRepository;
     @Autowired
     private FormataDataUtil formataDataUtil;
 
@@ -100,7 +96,7 @@ public class PeriodoServiceImpl implements PeriodoService{
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
-        Long total = ChronoUnit.DAYS.between(periodo.getDataInicial(), periodo.getDataFinal());
+        Long total = periodoHelper.calcularTotalDias(periodo.getDataInicial(), periodo.getDataFinal());
 
         return ResponseEntity.ok(new ApiResponseDTO(200, "Total de dias calculado com sucesso", total));
     }
@@ -110,21 +106,8 @@ public class PeriodoServiceImpl implements PeriodoService{
         PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
-        List<DiaSemanaResponseDTO.DiaSemana> dias = new ArrayList<>();
-
-        for (LocalDate data = periodo.getDataInicial(); !data.isAfter(periodo.getDataFinal()); data = data.plusDays(1)) {
-            String diaSemana = diasDaSemanaUtil.obterDiaSemanaEmPortugue(data.getDayOfWeek());
-
-            Optional<DiaSemanaResponseDTO.DiaSemana> existente = dias.stream()
-                    .filter(d -> d.getDia().equals(diaSemana))
-                    .findFirst();
-
-            if (existente.isPresent()) {
-                existente.get().setQuantidade(existente.get().getQuantidade() + 1);
-            } else {
-                dias.add(new DiaSemanaResponseDTO.DiaSemana(diaSemana, 1L));
-            }
-        }
+        List<DiaSemanaResponseDTO.DiaSemana> dias =
+                periodoHelper.calcularDistribuicao(periodo.getDataInicial(), periodo.getDataFinal());
 
         return ResponseEntity.ok(new ApiResponseDTO(200, "Dias da semana calculados e distribuidos com sucesso", dias));
     }
