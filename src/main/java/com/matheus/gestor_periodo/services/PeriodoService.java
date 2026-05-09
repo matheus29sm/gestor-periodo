@@ -19,4 +19,6 @@ public interface PeriodoService {
     ResponseEntity<ApiResponseDTO> calcularDiasEntreDatas();
 
     ResponseEntity<ApiResponseDTO> contaDiasDaSemanaEntreDatas();
+
+    ResponseEntity<ApiResponseDTO> buscarPeriodoDetalhado();
 }

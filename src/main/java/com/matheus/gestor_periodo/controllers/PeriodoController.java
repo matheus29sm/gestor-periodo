@@ -58,4 +58,8 @@ public class PeriodoController {
         return periodoService.contaDiasDaSemanaEntreDatas();
     }
 
+    @GetMapping("/detalhado")
+    public ResponseEntity<ApiResponseDTO> exibePeriodoDetalhado() {
+        return periodoService.buscarPeriodoDetalhado();
+    }
 }

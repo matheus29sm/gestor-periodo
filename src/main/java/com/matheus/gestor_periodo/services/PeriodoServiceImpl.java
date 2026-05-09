@@ -112,4 +112,22 @@ public class PeriodoServiceImpl implements PeriodoService{
         return ResponseEntity.ok(new ApiResponseDTO(200, "Dias da semana calculados e distribuidos com sucesso", dias));
     }
 
+    @Override
+    public ResponseEntity<ApiResponseDTO> buscarPeriodoDetalhado() {
+        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
+            .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+
+        String dataInicial = formataDataUtil.formataData(periodo.getDataInicial());
+        String dataFinal = formataDataUtil.formataData(periodo.getDataFinal());
+
+        Long totalDias = periodoHelper.calcularTotalDias(periodo.getDataInicial(), periodo.getDataFinal());
+
+        List<DiaSemanaResponseDTO.DiaSemana> distribuicao =
+                periodoHelper.calcularDistribuicao(periodo.getDataInicial(), periodo.getDataFinal());
+
+        PeriodoReponseDTO.PeriodoDetalhado response = new PeriodoReponseDTO.PeriodoDetalhado(dataInicial, dataFinal, totalDias, distribuicao);
+
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Período completo obtido com sucesso", response));
+    }
+
 }
