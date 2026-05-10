@@ -1,7 +1,7 @@
 package com.matheus.gestor_periodo.unit.services;
 
 import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
-import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.repository.PeriodoRepository;
 import com.matheus.gestor_periodo.services.PeriodoServiceImpl;
@@ -41,7 +41,7 @@ class PeriodoServiceImplTest {
     @Mock
     private FormataDataUtil formataDataUtil;
     @Mock
-    private PeriodoReponseDTO.Periodo periodo;
+    private PeriodoResponseDTO.Periodo periodo;
     @Mock
     private PeriodoRequestDTO.AtualizarData atualizarData;
 

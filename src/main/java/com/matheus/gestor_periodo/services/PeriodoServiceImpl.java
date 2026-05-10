@@ -2,7 +2,7 @@ package com.matheus.gestor_periodo.services;
 
 import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
 import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
-import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
 import com.matheus.gestor_periodo.helper.PeriodoHelper;
 import com.matheus.gestor_periodo.repository.PeriodoRepository;
@@ -27,7 +27,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> buscarPeriodo() {
-        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
+        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
         String response = "DataInicial: " + formataDataUtil.formataData(periodo.getDataInicial())
@@ -93,7 +93,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> calcularDiasEntreDatas() {
-        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
+        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
         Long total = periodoHelper.calcularTotalDias(periodo.getDataInicial(), periodo.getDataFinal());
@@ -103,7 +103,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> contaDiasDaSemanaEntreDatas() {
-        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
+        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
                 .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
         List<DiaSemanaResponseDTO.DiaSemana> dias =
@@ -114,7 +114,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> buscarPeriodoDetalhado() {
-        PeriodoReponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
+        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
             .orElseThrow(() -> new ServiceException("Período não encontrado!"));
 
         String dataInicial = formataDataUtil.formataData(periodo.getDataInicial());
@@ -125,7 +125,7 @@ public class PeriodoServiceImpl implements PeriodoService{
         List<DiaSemanaResponseDTO.DiaSemana> distribuicao =
                 periodoHelper.calcularDistribuicao(periodo.getDataInicial(), periodo.getDataFinal());
 
-        PeriodoReponseDTO.PeriodoDetalhado response = new PeriodoReponseDTO.PeriodoDetalhado(dataInicial, dataFinal, totalDias, distribuicao);
+        PeriodoResponseDTO.PeriodoDetalhado response = new PeriodoResponseDTO.PeriodoDetalhado(dataInicial, dataFinal, totalDias, distribuicao);
 
         return ResponseEntity.ok(new ApiResponseDTO(200, "Período completo obtido com sucesso", response));
     }

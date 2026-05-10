@@ -1,6 +1,6 @@
 package com.matheus.gestor_periodo.repository;
 
-import com.matheus.gestor_periodo.dto.periodo.PeriodoReponseDTO;
+import com.matheus.gestor_periodo.dto.periodo.PeriodoResponseDTO;
 import com.matheus.gestor_periodo.entity.Periodo;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +17,7 @@ import static com.matheus.gestor_periodo.constants.QueriesConstant.CADASTRAR_DAT
 public interface PeriodoRepository extends JpaRepository<Periodo, Long> {
 
     @Query(value = BUSCAR_PERIODO, nativeQuery = true)
-    Optional<PeriodoReponseDTO.Periodo> buscarPeriodo(Long id);
+    Optional<PeriodoResponseDTO.Periodo> buscarPeriodo(Long id);
 
     @Transactional
     @Modifying
