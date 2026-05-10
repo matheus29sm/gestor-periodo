@@ -27,8 +27,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> buscarPeriodo() {
-        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
-                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        var periodo = buscarPeriodoPadrao();
 
         String response = "DataInicial: " + formataDataUtil.formataData(periodo.getDataInicial())
                 + " - " +
@@ -39,27 +38,24 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> buscarDataInicial() {
-        String response = periodoRepository.buscarPeriodo(1L)
-                .map(p -> formataDataUtil.formataData(p.getDataInicial()))
-                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        LocalDate dataInicial = buscarPeriodoPadrao().getDataInicial();
+        String response =  formataDataUtil.formataData(dataInicial);
 
         return ResponseEntity.ok(new ApiResponseDTO(200, "Data inicial obtida com sucesso", response));
     }
 
     @Override
     public ResponseEntity<ApiResponseDTO> buscarDataFinal() {
-         String response = periodoRepository.buscarPeriodo(1L)
-                .map(p -> formataDataUtil.formataData(p.getDataFinal()))
-                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        LocalDate dataFinal =  buscarPeriodoPadrao().getDataFinal();
+        String response =  formataDataUtil.formataData(dataFinal);
 
          return ResponseEntity.ok(new ApiResponseDTO(200, "Data final obtida com sucesso", response));
     }
 
     @Override
     public ResponseEntity<ApiResponseDTO> atualizarDataInicial(PeriodoRequestDTO.AtualizarData request){
-            LocalDate novaDataInicial = request.getNovaData();
-        LocalDate dataFinal = periodoRepository.buscarPeriodo(1L)
-                .orElseThrow(() -> new ServiceException("Período não encontrado!")).getDataFinal();
+        LocalDate novaDataInicial = request.getNovaData();
+        LocalDate dataFinal =  buscarPeriodoPadrao().getDataFinal();
 
             if (novaDataInicial.isAfter(dataFinal)){
                 throw new ServiceException("A data inicial não pode ser posterior à data final.");
@@ -75,9 +71,7 @@ public class PeriodoServiceImpl implements PeriodoService{
     @Override
     public ResponseEntity<ApiResponseDTO> atualizarDataFinal(PeriodoRequestDTO.AtualizarData request){
         LocalDate novaDataFinal = request.getNovaData();
-
-        LocalDate dataInicial = periodoRepository.buscarPeriodo(1L)
-                .orElseThrow(() -> new ServiceException("Período não encontrado!")).getDataInicial();
+        LocalDate dataInicial = buscarPeriodoPadrao().getDataInicial();
 
         if (novaDataFinal.isBefore((dataInicial))){
             throw new ServiceException("A data final não pode ser anterior à data inicial.");
@@ -93,8 +87,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> calcularDiasEntreDatas() {
-        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
-                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        var periodo = buscarPeriodoPadrao();
 
         Long total = periodoHelper.calcularTotalDias(periodo.getDataInicial(), periodo.getDataFinal());
 
@@ -103,8 +96,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> contaDiasDaSemanaEntreDatas() {
-        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
-                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        var periodo = buscarPeriodoPadrao();
 
         List<DiaSemanaResponseDTO.DiaSemana> dias =
                 periodoHelper.calcularDistribuicao(periodo.getDataInicial(), periodo.getDataFinal());
@@ -114,8 +106,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
     @Override
     public ResponseEntity<ApiResponseDTO> buscarPeriodoDetalhado() {
-        PeriodoResponseDTO.Periodo periodo = periodoRepository.buscarPeriodo(1L)
-            .orElseThrow(() -> new ServiceException("Período não encontrado!"));
+        var periodo = buscarPeriodoPadrao();
 
         String dataInicial = formataDataUtil.formataData(periodo.getDataInicial());
         String dataFinal = formataDataUtil.formataData(periodo.getDataFinal());
@@ -128,6 +119,11 @@ public class PeriodoServiceImpl implements PeriodoService{
         PeriodoResponseDTO.PeriodoDetalhado response = new PeriodoResponseDTO.PeriodoDetalhado(dataInicial, dataFinal, totalDias, distribuicao);
 
         return ResponseEntity.ok(new ApiResponseDTO(200, "Período completo obtido com sucesso", response));
+    }
+
+    private PeriodoResponseDTO.Periodo buscarPeriodoPadrao() {
+        return periodoRepository.buscarPeriodo(1L)
+                .orElseThrow(() -> new ServiceException("Período não encontrado!"));
     }
 
 }
