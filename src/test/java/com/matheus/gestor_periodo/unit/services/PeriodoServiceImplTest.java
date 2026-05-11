@@ -1,8 +1,10 @@
 package com.matheus.gestor_periodo.unit.services;
 
 import com.matheus.gestor_periodo.dto.apiResponse.ApiResponseDTO;
+import com.matheus.gestor_periodo.dto.diasSemana.DiaSemanaResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoResponseDTO;
 import com.matheus.gestor_periodo.dto.periodo.PeriodoRequestDTO;
+import com.matheus.gestor_periodo.helper.PeriodoHelper;
 import com.matheus.gestor_periodo.repository.PeriodoRepository;
 import com.matheus.gestor_periodo.services.PeriodoServiceImpl;
 import com.matheus.gestor_periodo.utils.DiasDaSemanaUtil;
@@ -25,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +35,8 @@ class PeriodoServiceImplTest {
 
     @InjectMocks
     private PeriodoServiceImpl periodoService;
+    @Mock
+    private PeriodoHelper periodoHelper;
     @Mock
     private PeriodoRepository periodoRepository;
     @Mock
@@ -44,6 +47,8 @@ class PeriodoServiceImplTest {
     private PeriodoResponseDTO.Periodo periodo;
     @Mock
     private PeriodoRequestDTO.AtualizarData atualizarData;
+    @Mock
+    private DiaSemanaResponseDTO.DiaSemana diaSemana;
 
     private final LocalDate INICIO = LocalDate.of(2026, 3, 1);
     private final LocalDate FIM = LocalDate.of(2026, 3, 11);
@@ -179,15 +184,19 @@ class PeriodoServiceImplTest {
         }
 
     }
+
     @Nested
     class CalculoIntervaloTests {
 
         @Test
         @DisplayName("Deve calcular dias entre as datas do período com sucesso")
         void deveCalcularDiasEntreDatasComSucesso() {
+            Long quantidadeEsperada = 10L;
+
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(periodo.getDataFinal()).thenReturn(FIM);
+            when(periodoHelper.calcularTotalDias(INICIO, FIM)).thenReturn(quantidadeEsperada);
 
             ResponseEntity<ApiResponseDTO> response = periodoService.calcularDiasEntreDatas();
 
@@ -206,7 +215,7 @@ class PeriodoServiceImplTest {
             when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(periodo.getDataFinal()).thenReturn(FIM);
-            when(diasDaSemanaUtil.obterDiaSemanaEmPortugue(any())).thenReturn("Segunda-feira");
+            when(periodoHelper.calcularDistribuicao(INICIO, FIM)).thenReturn(List.of(diaSemana));
 
             ResponseEntity<ApiResponseDTO> response = periodoService.contaDiasDaSemanaEntreDatas();
 
