@@ -223,4 +223,26 @@ class PeriodoServiceImplTest {
             assertTrue(response.getBody().getMensagem().contains("Dias da semana calculados e distribuidos com sucesso"));
         }
     }
+
+    @Nested
+    class ObterPeriodoDetalhadoTests {
+
+        @Test
+        @DisplayName("Deve buscar período detalhado com sucesso")
+        void deveObterPeriodoDetalhadoComSucesso() {
+            Long quantidadeEsperada = 10L;
+
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
+            when(periodo.getDataInicial()).thenReturn(INICIO);
+            when(periodo.getDataFinal()).thenReturn(FIM);
+            when(periodoHelper.calcularTotalDias(INICIO, FIM)).thenReturn(quantidadeEsperada);
+            when(periodoHelper.calcularDistribuicao(INICIO, FIM)).thenReturn(List.of(diaSemana));
+
+            ResponseEntity<ApiResponseDTO> response = periodoService.buscarPeriodoDetalhado();
+
+            assertEquals(200, response.getBody().getStatus());
+            assertTrue(response.getBody().getMensagem().contains("Período detalhado obtido com sucesso"));
+        }
+
+    }
 }

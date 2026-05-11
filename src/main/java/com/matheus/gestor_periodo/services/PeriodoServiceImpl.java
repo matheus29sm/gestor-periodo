@@ -118,7 +118,7 @@ public class PeriodoServiceImpl implements PeriodoService{
 
         PeriodoResponseDTO.PeriodoDetalhado response = new PeriodoResponseDTO.PeriodoDetalhado(dataInicial, dataFinal, totalDias, distribuicao);
 
-        return ResponseEntity.ok(new ApiResponseDTO(200, "Período completo obtido com sucesso", response));
+        return ResponseEntity.ok(new ApiResponseDTO(200, "Período detalhado obtido com sucesso", response));
     }
 
     private PeriodoResponseDTO.Periodo buscarPeriodoPadrao() {
