@@ -40,8 +40,6 @@ class PeriodoServiceImplTest {
     @Mock
     private PeriodoRepository periodoRepository;
     @Mock
-    private DiasDaSemanaUtil diasDaSemanaUtil;
-    @Mock
     private FormataDataUtil formataDataUtil;
     @Mock
     private PeriodoResponseDTO.Periodo periodo;
@@ -52,7 +50,7 @@ class PeriodoServiceImplTest {
 
     private final LocalDate INICIO = LocalDate.of(2026, 3, 1);
     private final LocalDate FIM = LocalDate.of(2026, 3, 11);
-
+    private final Long ID = 1l;
 
     @Nested
     class ObterPeriodoTests {
@@ -60,7 +58,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve buscar período com sucesso")
         void deveObterPeriodoComSucesso() {
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(periodo.getDataFinal()).thenReturn(FIM);
 
@@ -73,7 +71,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve lançar exceção quando período não encontrado")
         void deveLancarExcecaoQuandoPeriodoNaoEncontradoEmObterPeriodo() {
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.empty());
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.empty());
 
             ServiceException serviceException = assertThrows(ServiceException.class,
                     () -> periodoService.buscarPeriodo());
@@ -89,7 +87,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve buscar data inicial com sucesso")
         void deveObterDataInicialComSucesso() {
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(formataDataUtil.formataData(INICIO)).thenReturn("01/03/2026");
 
@@ -102,7 +100,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve lançar exceção quando período não encontrado")
         void deveObterDataFinalComSucesso() {
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataFinal()).thenReturn(FIM);
             when(formataDataUtil.formataData(FIM)).thenReturn("11/03/2026");
 
@@ -124,7 +122,7 @@ class PeriodoServiceImplTest {
         void deveAtualizarDataInicialComSucesso() {
             LocalDate novaData = LocalDate.of(2026, 3, 1);
 
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataFinal()).thenReturn(FIM);
             when(atualizarData.getNovaData()).thenReturn(novaData);
             when(formataDataUtil.formataData(novaData)).thenReturn("01/03/2026");
@@ -133,7 +131,7 @@ class PeriodoServiceImplTest {
 
             assertTrue(response.getBody().getMensagem().contains("A data inicial foi atualizada com sucesso"));
             assertEquals("01/03/2026", response.getBody().getDados());
-            verify(periodoRepository).atualizarDataInicial(1L, novaData);
+            verify(periodoRepository).atualizarDataInicial(ID, novaData);
         }
 
         @Test
@@ -141,7 +139,7 @@ class PeriodoServiceImplTest {
         void deveLancarExcecaoQuandoNovaDataInicialPosteriorADataFinal() {
             LocalDate novaData = LocalDate.of(2026, 5, 31);
 
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataFinal()).thenReturn(FIM);
             when(atualizarData.getNovaData()).thenReturn(novaData);
 
@@ -156,7 +154,7 @@ class PeriodoServiceImplTest {
         void deveAtualizarDataFinalComSucesso() {
             LocalDate novaData = LocalDate.of(2026, 5, 31);
 
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(atualizarData.getNovaData()).thenReturn(novaData);
             when(formataDataUtil.formataData(novaData)).thenReturn("31/05/2026");
@@ -165,7 +163,7 @@ class PeriodoServiceImplTest {
 
             assertTrue(response.getBody().getMensagem().contains("A data final foi atualizada com sucesso"));
             assertEquals("31/05/2026", response.getBody().getDados());
-            verify(periodoRepository).atualizarDataFinal(1L, novaData);
+            verify(periodoRepository).atualizarDataFinal(ID, novaData);
         }
 
         @Test
@@ -173,7 +171,7 @@ class PeriodoServiceImplTest {
         void deveLancarExcecaoQuandoNovaDataFinalAnteriorADataInicial() {
             LocalDate novaData = LocalDate.of(2026, 2, 28);
 
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(atualizarData.getNovaData()).thenReturn(novaData);
 
@@ -193,7 +191,7 @@ class PeriodoServiceImplTest {
         void deveCalcularDiasEntreDatasComSucesso() {
             Long quantidadeEsperada = 10L;
 
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(periodo.getDataFinal()).thenReturn(FIM);
             when(periodoHelper.calcularTotalDias(INICIO, FIM)).thenReturn(quantidadeEsperada);
@@ -212,7 +210,7 @@ class PeriodoServiceImplTest {
         @Test
         @DisplayName("Deve gerar a distribuição dias da semana entre datas do período com sucesso")
         void deveGerarDistribuicaoDiasDaSemanaEntreDatasComSucesso() {
-            when(periodoRepository.buscarPeriodo(1L)).thenReturn(Optional.of(periodo));
+            when(periodoRepository.buscarPeriodo(ID)).thenReturn(Optional.of(periodo));
             when(periodo.getDataInicial()).thenReturn(INICIO);
             when(periodo.getDataFinal()).thenReturn(FIM);
             when(periodoHelper.calcularDistribuicao(INICIO, FIM)).thenReturn(List.of(diaSemana));
@@ -220,6 +218,7 @@ class PeriodoServiceImplTest {
             ResponseEntity<ApiResponseDTO> response = periodoService.contaDiasDaSemanaEntreDatas();
 
             List<?> dias = (List<?>) response.getBody().getDados();
+
             assertFalse(dias.isEmpty());
             assertTrue(response.getBody().getMensagem().contains("Dias da semana calculados e distribuidos com sucesso"));
         }
