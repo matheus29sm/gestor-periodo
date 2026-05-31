@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestor de Período - API Links</title>
+    <style>
+        body {
+          background-color: #121212;
+          color: #f5f5f5;
+          font-family: Arial, sans-serif;
+          margin: 20px;
+        }
+        h1 {
+          color: #00bcd4;
+        }
+        ul {
+          list-style: none;
+          padding: 0;
+        }
+        li {
+          margin: 20px 0;
+        }
+        a {
+          text-decoration: none;
+          color: #ffffff;
+          background-color: #333333;
+          padding: 10px 15px;
+          border-radius: 5px;
+          transition: background-color 0.3s;
+        }
+        a:hover {
+          background-color: #00bcd4;
+          color: #121212;
+        }
+    </style>
+</head>
+<body>
+<h1>Gestor de Período</h1>
+<ul>
+    <li><a href="http://localhost:8080/periodo" target="_blank">
+        /periodo - Exibe o período atual</a></li>
+    <li><a href="http://localhost:8080/periodo/inicial" target="_blank">
+        /periodo/inicial - Exibe a data inicial</a></li>
+    <li><a href="http://localhost:8080/periodo/final" target="_blank">
+        /periodo/final - Exibe a data final</a></li>
+    <li><a href="http://localhost:8080/periodo/atualizarInicial" target="_blank">
+        /periodo/atualizarInicial - Atualiza a data inicial (necessário Body)</a></li>
+    <li><a href="http://localhost:8080/periodo/atualizarFinal" target="_blank">
+        /atualizarFinal - Atualiza a data final (necessário Body)</a></li>
+    <li><a href="http://localhost:8080/periodo/quantidade" target="_blank">
+        /periodo/quantidade - Exibe quantidade de dias</a></li>
+    <li><a href="http://localhost:8080/periodo/distribuicao" target="_blank">
+        /periodo/distribuicao - Exibe distribuição de dias</a></li>
+    <li><a href="http://localhost:8080/periodo/detalhado" target="_blank">
+        /periodo/detalhado - Exibe período detalhado</a></li>
+</ul>
+</body>
+</html>
